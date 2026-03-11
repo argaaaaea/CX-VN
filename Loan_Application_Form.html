@@ -587,8 +587,8 @@
         // Function to fetch user data from API
         async function fetchUserData(identifier) {
             try {
-                // Use PHONE as identifier type for fetching user data
-                const identifierType = 'PHONE';
+                // Use ID as identifier type for fetching user data
+                const identifierType = 'ID';
 
                 const fetchUrl = `${API_CONFIG.endpoint}?identifier=${encodeURIComponent(identifier)}&type=${identifierType}`;
 
