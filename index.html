@@ -103,6 +103,13 @@
             box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
         }
 
+        input[readonly],
+        select:disabled {
+            background-color: #ecf0f1;
+            color: #7f8c8d;
+            cursor: not-allowed;
+        }
+
         .checkbox-group,
         .radio-group {
             display: flex;
@@ -249,6 +256,156 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 20px;
+                border-radius: 12px;
+            }
+
+            .header {
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+                margin-bottom: 8px;
+            }
+
+            .header p {
+                font-size: 12px;
+            }
+
+            .section {
+                margin-bottom: 20px;
+            }
+
+            .section-title {
+                padding: 10px 12px;
+                font-size: 14px;
+                margin-bottom: 12px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                margin-bottom: 15px;
+            }
+
+            label {
+                margin-bottom: 6px;
+                font-size: 13px;
+            }
+
+            input[type="text"],
+            input[type="email"],
+            input[type="tel"],
+            input[type="number"],
+            input[type="date"],
+            select {
+                padding: 12px;
+                font-size: 16px;
+                border-radius: 6px;
+            }
+
+            textarea {
+                padding: 12px;
+                font-size: 16px;
+                min-height: 100px;
+            }
+
+            .checkbox-group,
+            .radio-group {
+                gap: 12px;
+                margin-top: 10px;
+                flex-direction: column;
+            }
+
+            .checkbox-item,
+            .radio-item {
+                gap: 8px;
+            }
+
+            .checkbox-item label,
+            .radio-item label {
+                font-size: 14px;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 12px;
+                margin-top: 25px;
+            }
+
+            button {
+                padding: 14px 20px;
+                font-size: 16px;
+                width: 100%;
+                border-radius: 6px;
+            }
+
+            .conditional-section {
+                padding: 12px;
+                margin-top: 12px;
+            }
+
+            .alert {
+                padding: 12px;
+                margin-bottom: 15px;
+                font-size: 14px;
+                border-radius: 6px;
+            }
+
+            .spinner {
+                width: 14px;
+                height: 14px;
+                border: 2px solid #0c5460;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 8px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .section-title {
+                font-size: 13px;
+                padding: 8px 10px;
+            }
+
+            label {
+                font-size: 12px;
+            }
+
+            input[type="text"],
+            input[type="email"],
+            input[type="tel"],
+            input[type="number"],
+            input[type="date"],
+            select {
+                padding: 10px;
+                font-size: 16px;
+            }
+
+            button {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -571,6 +728,9 @@
             // You can add additional employment field logic here if needed
         }
 
+        // Track if form was pre-filled from API
+        let isFormPrefilled = false;
+
         // Configuration
         const API_CONFIG = {
             endpoint: 'https://15dex.api.infobip.com/people/2/persons',
@@ -613,17 +773,30 @@
 
         // Function to prefill form with user data
         function prefillFormWithData(userData) {
+            // Set flag to indicate form was pre-filled
+            isFormPrefilled = true;
+
             // Basic information
             if (userData.firstName) document.getElementById('firstName').value = userData.firstName;
             if (userData.lastName) document.getElementById('lastName').value = userData.lastName;
-            if (userData.birthDate) document.getElementById('dob').value = userData.birthDate;
+            if (userData.birthDate) {
+                document.getElementById('dob').value = userData.birthDate;
+            }
 
             // Custom attributes
             const customAttrs = userData.customAttributes || {};
-            if (customAttrs['CX VN - Nationality']) document.getElementById('nationality').value = customAttrs['CX VN - Nationality'];
-            if (customAttrs['CX VN - ID Type']) document.getElementById('idType').value = customAttrs['CX VN - ID Type'];
-            if (customAttrs['CX VN - ID Number']) document.getElementById('idNumber').value = customAttrs['CX VN - ID Number'];
-            if (customAttrs['CX VN - Marital Status']) document.getElementById('maritalStatus').value = customAttrs['CX VN - Marital Status'];
+            if (customAttrs['CX VN - Nationality']) {
+                document.getElementById('nationality').value = customAttrs['CX VN - Nationality'];
+            }
+            if (customAttrs['CX VN - ID Type']) {
+                document.getElementById('idType').value = customAttrs['CX VN - ID Type'];
+            }
+            if (customAttrs['CX VN - ID Number']) {
+                document.getElementById('idNumber').value = customAttrs['CX VN - ID Number'];
+            }
+            if (customAttrs['CX VN - Marital Status']) {
+                document.getElementById('maritalStatus').value = customAttrs['CX VN - Marital Status'];
+            }
             if (customAttrs['CX VN - Employment Status']) document.getElementById('employmentStatus').value = customAttrs['CX VN - Employment Status'];
             if (customAttrs['CX VN - Income']) document.getElementById('monthlyIncome').value = customAttrs['CX VN - Income'];
             if (customAttrs['CX VN - Zipcode']) document.getElementById('zipcode').value = customAttrs['CX VN - Zipcode'];
@@ -641,6 +814,25 @@
             if (userData.address) document.getElementById('address').value = userData.address;
             if (userData.city) document.getElementById('city').value = userData.city;
             if (userData.country) document.getElementById('state').value = userData.country;
+
+            // Disable all Applicant Information fields
+            document.getElementById('firstName').readOnly = true;
+            document.getElementById('lastName').readOnly = true;
+            document.getElementById('dob').readOnly = true;
+            document.getElementById('nationality').readOnly = true;
+            document.getElementById('idType').disabled = true;
+            document.getElementById('idNumber').readOnly = true;
+            document.getElementById('maritalStatus').disabled = true;
+            document.getElementById('email').readOnly = true;
+            document.getElementById('phone').readOnly = true;
+            document.getElementById('address').readOnly = true;
+            document.getElementById('city').readOnly = true;
+            document.getElementById('state').readOnly = true;
+            document.getElementById('zipcode').readOnly = true;
+
+            // Disable all Employment Information fields
+            document.getElementById('employmentStatus').disabled = true;
+            document.getElementById('monthlyIncome').readOnly = true;
         }
 
         // Helper function to show alerts
@@ -659,7 +851,8 @@
 
             alertContainer.appendChild(alertDiv);
 
-            if (type !== 'loading') {
+            // Keep success alerts permanently, dismiss error alerts after 5 seconds
+            if (type === 'alert-error') {
                 setTimeout(() => {
                     alertDiv.classList.remove('show');
                 }, 5000);
@@ -756,6 +949,21 @@
                     document.getElementById('businessInfoSection').classList.remove('active');
                 } else {
                     const error = await response.json();
+                    const errorMessage = error.errorMessage ? error.errorMessage.toLowerCase() : '';
+
+                    // Check for phone number already exists error (only if form was not pre-filled)
+                    if (!isFormPrefilled && errorMessage.includes('phone') && errorMessage.includes('already exist')) {
+                        showAlert(`Error: Phone number already exists. Please use a different phone number.`, 'alert-error');
+                        document.getElementById('loanForm').style.display = 'block';
+                        return;
+                    }
+
+                    // Check for email already exists error (only if form was not pre-filled)
+                    if (!isFormPrefilled && errorMessage.includes('email') && errorMessage.includes('already exist')) {
+                        showAlert(`Error: Email already exists. Please use a different email address.`, 'alert-error');
+                        document.getElementById('loanForm').style.display = 'block';
+                        return;
+                    }
 
                     // If error code is 40004, retry with PATCH method
                     if (error.errorCode === 40004 && method === 'POST') {
@@ -764,8 +972,6 @@
                         // Determine identifier type and value based on error message
                         let identifierType = 'EMAIL';
                         let identifier = data.contactInformation?.email?.[0]?.address || '';
-
-                        const errorMessage = error.errorMessage ? error.errorMessage.toLowerCase() : '';
 
                         // Check if error message mentions phone (priority over email)
                         if (errorMessage.includes('phone')) {
@@ -787,6 +993,7 @@
                     }
 
                     showAlert(`Error: ${error.message || 'Failed to submit application. Please try again.'}`, 'alert-error');
+                    document.getElementById('loanForm').style.display = 'block';
                 }
             } catch (error) {
                 if (error.name === 'AbortError') {
@@ -796,6 +1003,7 @@
                 } else {
                     showAlert(`Error submitting application: ${error.message}`, 'alert-error');
                 }
+                document.getElementById('loanForm').style.display = 'block';
                 console.error('API Error:', error);
             }
         }
@@ -818,6 +1026,9 @@
                 showAlert('Please fill out all required fields correctly.', 'alert-error');
                 return;
             }
+
+            // Hide the form
+            document.getElementById('loanForm').style.display = 'none';
 
             // Collect and map data
             const mappedData = collectFormData();
