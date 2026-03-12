@@ -750,7 +750,7 @@
                 // Use FACEBOOK as identifier type for fetching user data
                 const identifierType = 'FACEBOOK';
 
-                const fetchUrl = `${API_CONFIG.endpoint}?identifier=${encodeURIComponent(identifier)}&type=${identifierType}`;
+                const fetchUrl = `${API_CONFIG.endpoint}?identifier=${encodeURIComponent(identifier)}&type=${identifierType}&sender=a993f089-68ec-4697-b658-cc5fa9bfa818`;
 
                 const response = await fetch(fetchUrl, {
                     method: 'GET',
