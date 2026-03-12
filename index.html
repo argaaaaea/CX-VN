@@ -747,10 +747,10 @@
         // Function to fetch user data from API
         async function fetchUserData(identifier) {
             try {
-                // Use FACEBOOK as identifier type for fetching user data
-                const identifierType = 'FACEBOOK';
+                // Use PHONE as identifier type for fetching user data
+                const identifierType = 'PHONE';
 
-                const fetchUrl = `${API_CONFIG.endpoint}?identifier=${encodeURIComponent(identifier)}&type=${identifierType}&sender=a993f089-68ec-4697-b658-cc5fa9bfa818`;
+                const fetchUrl = `${API_CONFIG.endpoint}?identifier=${encodeURIComponent(identifier)}&type=${identifierType}`;
 
                 const response = await fetch(fetchUrl, {
                     method: 'GET',
