@@ -815,24 +815,24 @@
             if (userData.city) document.getElementById('city').value = userData.city;
             if (userData.country) document.getElementById('state').value = userData.country;
 
-            // Disable all Applicant Information fields
-            document.getElementById('firstName').readOnly = true;
-            document.getElementById('lastName').readOnly = true;
-            document.getElementById('dob').readOnly = true;
-            document.getElementById('nationality').readOnly = true;
-            document.getElementById('idType').disabled = true;
-            document.getElementById('idNumber').readOnly = true;
-            document.getElementById('maritalStatus').disabled = true;
-            document.getElementById('email').readOnly = true;
-            document.getElementById('phone').readOnly = true;
-            document.getElementById('address').readOnly = true;
-            document.getElementById('city').readOnly = true;
-            document.getElementById('state').readOnly = true;
-            document.getElementById('zipcode').readOnly = true;
+            // Disable only fields that have data from API
+            if (userData.firstName) document.getElementById('firstName').readOnly = true;
+            if (userData.lastName) document.getElementById('lastName').readOnly = true;
+            if (userData.birthDate) document.getElementById('dob').readOnly = true;
+            if (customAttrs['CX VN - Nationality']) document.getElementById('nationality').readOnly = true;
+            if (customAttrs['CX VN - ID Type']) document.getElementById('idType').disabled = true;
+            if (customAttrs['CX VN - ID Number']) document.getElementById('idNumber').readOnly = true;
+            if (customAttrs['CX VN - Marital Status']) document.getElementById('maritalStatus').disabled = true;
+            if (contactInfo.email && contactInfo.email[0] && contactInfo.email[0].address) document.getElementById('email').readOnly = true;
+            if (contactInfo.phone && contactInfo.phone[0] && contactInfo.phone[0].number) document.getElementById('phone').readOnly = true;
+            if (userData.address) document.getElementById('address').readOnly = true;
+            if (userData.city) document.getElementById('city').readOnly = true;
+            if (userData.country) document.getElementById('state').readOnly = true;
+            if (customAttrs['CX VN - Zipcode']) document.getElementById('zipcode').readOnly = true;
 
-            // Disable all Employment Information fields
-            document.getElementById('employmentStatus').disabled = true;
-            document.getElementById('monthlyIncome').readOnly = true;
+            // Disable employment fields only if they have data
+            if (customAttrs['CX VN - Employment Status']) document.getElementById('employmentStatus').disabled = true;
+            if (customAttrs['CX VN - Income']) document.getElementById('monthlyIncome').readOnly = true;
         }
 
         // Helper function to show alerts
@@ -952,6 +952,14 @@
                     document.getElementById('personalLoanSection').classList.remove('active');
                     document.getElementById('businessLoanSection').classList.remove('active');
                     document.getElementById('businessInfoSection').classList.remove('active');
+
+                    // Call webhook if sessionId is present
+                    const sessionId = getQueryParam('sessionId');
+                    if (sessionId) {
+                        fetch(`https://api2.infobip.com/bots/webhook/${sessionId}`, {
+                            method: 'POST'
+                        }).catch(err => console.error('Webhook error:', err));
+                    }
                 } else {
                     const error = await response.json();
                     const errorMessage = error.errorMessage ? error.errorMessage.toLowerCase() : '';
