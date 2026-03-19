@@ -104,8 +104,15 @@
         }
 
         input[readonly],
-        select:disabled {
+        select:disabled,
+        input:disabled {
             background-color: #ecf0f1;
+            color: #7f8c8d;
+            cursor: not-allowed;
+        }
+
+        input[type="radio"]:disabled + label,
+        input[type="checkbox"]:disabled + label {
             color: #7f8c8d;
             cursor: not-allowed;
         }
@@ -626,7 +633,7 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="startDate">Start Date Preferred <span class="required">*</span></label>
+                        <label for="startDate">Request Date <span class="required">*</span></label>
                         <input type="date" id="startDate" name="startDate" required>
                     </div>
                 </div>
@@ -742,6 +749,25 @@
         function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(param);
+        }
+
+        // Prefill loan request fields based on requested_amount and loan_type query parameters
+        function prefillLoanRequest() {
+            const loanType = getQueryParam('loan_type');
+            const requestedAmount = getQueryParam('requested_amount');
+
+            if (loanType) {
+                const loanTypeEl = document.getElementById('loanType');
+                loanTypeEl.value = loanType;
+                toggleLoanTypeFields();
+                loanTypeEl.disabled = true;
+            }
+
+            if (requestedAmount) {
+                const amountEl = document.getElementById('requestedAmount');
+                amountEl.value = requestedAmount;
+                amountEl.readOnly = true;
+            }
         }
 
         // Function to fetch user data from API
@@ -1023,13 +1049,20 @@
             }
         }
 
-        // Check for user identifier in URL on page load
+        // Check for query parameters in URL on page load
         window.addEventListener('load', function() {
+            // Autofill request date with today and lock it
+            const startDateEl = document.getElementById('startDate');
+            startDateEl.value = new Date().toISOString().split('T')[0];
+            startDateEl.readOnly = true;
+
             const userIdentifier = getQueryParam('identifier');
             if (userIdentifier) {
                 console.log('User identifier found in URL:', userIdentifier);
                 fetchUserData(userIdentifier);
             }
+
+            prefillLoanRequest();
         });
 
         // Form submission event listener
