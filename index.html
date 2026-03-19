@@ -957,7 +957,9 @@
                     const sessionId = getQueryParam('sessionId');
                     if (sessionId) {
                         fetch(`https://api2.infobip.com/bots/webhook/${sessionId}`, {
-                            method: 'POST'
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email: data.contactInformation.email[0].address })
                         }).catch(err => console.error('Webhook error:', err));
                     }
                 } else {
