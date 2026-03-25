@@ -537,7 +537,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="monthlyIncome">Monthly Income ($) <span class="required">*</span></label>
+                        <label for="monthlyIncome">Monthly Income (VND) <span class="required">*</span></label>
                         <input type="number" id="monthlyIncome" name="monthlyIncome" min="0" step="0.01" required>
                     </div>
                 </div>
@@ -622,7 +622,7 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="requestedAmount">Requested Loan Amount ($) <span class="required">*</span></label>
+                        <label for="requestedAmount">Requested Loan Amount (VND) <span class="required">*</span></label>
                         <input type="number" id="requestedAmount" name="requestedAmount" min="0" step="0.01" required>
                     </div>
                     <div class="form-group">
@@ -663,7 +663,7 @@
                         <input type="number" id="yearsInBusiness" name="yearsInBusiness" min="0" step="0.1">
                     </div>
                     <div class="form-group">
-                        <label for="annualRevenue">Annual Revenue ($) <span class="required">*</span></label>
+                        <label for="annualRevenue">Annual Revenue (VND) <span class="required">*</span></label>
                         <input type="number" id="annualRevenue" name="annualRevenue" min="0" step="0.01">
                     </div>
                 </div>
@@ -824,9 +824,7 @@
                 document.getElementById('maritalStatus').value = customAttrs['CX VN - Marital Status'];
             }
             if (customAttrs['CX VN - Employment Status']) document.getElementById('employmentStatus').value = customAttrs['CX VN - Employment Status'];
-            const monthlyIncomeParam = getQueryParam('monthly_income');
-            if (monthlyIncomeParam) document.getElementById('monthlyIncome').value = monthlyIncomeParam;
-            else if (customAttrs['CX VN - Income']) document.getElementById('monthlyIncome').value = customAttrs['CX VN - Income'];
+            if (!getQueryParam('monthly_income') && customAttrs['CX VN - Income']) document.getElementById('monthlyIncome').value = customAttrs['CX VN - Income'];
             if (customAttrs['CX VN - Zipcode']) document.getElementById('zipcode').value = customAttrs['CX VN - Zipcode'];
 
             // Contact information
@@ -860,7 +858,7 @@
 
             // Disable employment fields only if they have data
             if (customAttrs['CX VN - Employment Status']) document.getElementById('employmentStatus').disabled = true;
-            if (monthlyIncomeParam || customAttrs['CX VN - Income']) document.getElementById('monthlyIncome').readOnly = true;
+            if (!getQueryParam('monthly_income') && customAttrs['CX VN - Income']) document.getElementById('monthlyIncome').readOnly = true;
         }
 
         // Helper function to show alerts
@@ -1065,6 +1063,12 @@
             }
 
             prefillLoanRequest();
+
+            const monthlyIncomeParam = getQueryParam('monthly_income');
+            if (monthlyIncomeParam) {
+                document.getElementById('monthlyIncome').value = monthlyIncomeParam;
+                document.getElementById('monthlyIncome').readOnly = true;
+            }
         });
 
         // Form submission event listener
