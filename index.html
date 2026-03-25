@@ -751,24 +751,6 @@
             return urlParams.get(param);
         }
 
-        // Prefill loan request fields based on requested_amount and loan_type query parameters
-        function prefillLoanRequest() {
-            const loanType = getQueryParam('loan_type');
-            const requestedAmount = getQueryParam('requested_amount');
-
-            if (loanType) {
-                const loanTypeEl = document.getElementById('loanType');
-                loanTypeEl.value = loanType;
-                toggleLoanTypeFields();
-                loanTypeEl.disabled = true;
-            }
-
-            if (requestedAmount) {
-                const amountEl = document.getElementById('requestedAmount');
-                amountEl.value = requestedAmount;
-                amountEl.readOnly = true;
-            }
-        }
 
         // Function to fetch user data from API
         async function fetchUserData(identifier) {
@@ -1062,7 +1044,20 @@
                 fetchUserData(userIdentifier);
             }
 
-            prefillLoanRequest();
+            const loanType = getQueryParam('loan_type');
+            if (loanType) {
+                const loanTypeEl = document.getElementById('loanType');
+                loanTypeEl.value = loanType;
+                toggleLoanTypeFields();
+                loanTypeEl.disabled = true;
+            }
+
+            const requestedAmount = getQueryParam('requested_amount');
+            if (requestedAmount) {
+                const amountEl = document.getElementById('requestedAmount');
+                amountEl.value = requestedAmount;
+                amountEl.readOnly = true;
+            }
 
             const monthlyIncomeParam = getQueryParam('monthly_income');
             if (monthlyIncomeParam) {
