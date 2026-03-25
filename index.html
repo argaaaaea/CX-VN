@@ -824,7 +824,9 @@
                 document.getElementById('maritalStatus').value = customAttrs['CX VN - Marital Status'];
             }
             if (customAttrs['CX VN - Employment Status']) document.getElementById('employmentStatus').value = customAttrs['CX VN - Employment Status'];
-            if (customAttrs['CX VN - Income']) document.getElementById('monthlyIncome').value = customAttrs['CX VN - Income'];
+            const monthlyIncomeParam = getQueryParam('monthly_income');
+            if (monthlyIncomeParam) document.getElementById('monthlyIncome').value = monthlyIncomeParam;
+            else if (customAttrs['CX VN - Income']) document.getElementById('monthlyIncome').value = customAttrs['CX VN - Income'];
             if (customAttrs['CX VN - Zipcode']) document.getElementById('zipcode').value = customAttrs['CX VN - Zipcode'];
 
             // Contact information
@@ -858,7 +860,7 @@
 
             // Disable employment fields only if they have data
             if (customAttrs['CX VN - Employment Status']) document.getElementById('employmentStatus').disabled = true;
-            if (customAttrs['CX VN - Income']) document.getElementById('monthlyIncome').readOnly = true;
+            if (monthlyIncomeParam || customAttrs['CX VN - Income']) document.getElementById('monthlyIncome').readOnly = true;
         }
 
         // Helper function to show alerts
